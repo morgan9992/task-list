@@ -17,61 +17,77 @@ done
 
 create_files(){
   cd $DIR_PATH
- 
+ # checking if task-file.txt has already been created 
 if [ -f "$task_file_name" ]   
  then
-	 echo "file already exists, should it be overwritten? (y/n)" 	 
+	 echo "file ($task_file_name) already exists in $DIR_PATH, should it be overwritten? (y/n)" 	 
 	 read input
 while [[ "$input" != "y" && "$input" != "n" ]]; do
  echo 'that is not an option please enter either y or n'
  read input 
 done 
 
+estab_task_list="TRUE" #  used to stop touch commands from being executed - we have already decdided the outcome of task-file.txt if the nested if statements are executed 
+
 if [ "$input" == "y" ]
 then 
 	rm $task_file_name	
-	touch $task_file_name
-	echo "file $task_file_name overwritten"
+	touch $task_file_name && echo "file $task_file_name overwritten"
 else 
       echo "file not changed , old $task_file_name still exists"  	
 fi
 fi   
 
-touch task-file.txt
-touch tmp.txt
-touch .task-list
+
+# checking if tmp.txt has already been created 
+if [ -f "$tmp_file_name" ]
+then
+	echo "file ($tmp_file_name) already exists in $DIR_PATH, should it be overwritten? (y/n)"     
+        read input
+  while [[ "$input" != "y" && "$input" != "n" ]]; do
+   echo 'that is not an option please enter either y or n'
+   read input
+  done
+  
+estab_tmp_list="TRUE" #same purpouse as in the previosu nested if statements but for the tmp file this time 
+
+  if [ "$input" == "y" ]
+  then
+          rm $tmp_file_name 
+          touch $tmp_file_name && echo "file $tmp_file_name overwritten"
+  else
+        echo "file not changed , old $tmp_file_name still exists"        
+  fi
+  fi
+
+touch $task_file_name
+touch $tmp_file_name
+
  
  }
 
 get_path
-
-
-DIR_CONTENT=$(ls $DIR_PATH)
-if [ "$DIR_CONTENT" == ""  ]
-then 
+ 
 create_files
-else 
-	echo 'this directory is not empty are you sure you want to continue, all previous task-list files will be overwritten (y/n)' 
-	read choice  
-	
-case $choice in
-	y)	
-	create_files
-;;
-	n)
-	exit 
-;;
-	
+
+if [ -f "$HOME/$config_file_name" ]
+then 
+	echo "$config_file_name already exists under $HOME, would you like to replace it? (y/n)" 
+read input
+ 
+while [[ "$input" != "y" && "$input" != "n" ]]; do
+   echo 'that is not an option please enter either y or n'
+    read input
+    done
+
+    
 
 
-esac
-fi 
-	
+echo "a config file will also be installed in your home directory: $HOME"	
+sleep 3
+touch "$HOME/$config_file_name" && echo "creating $config_file_name"
 
 
+echo 'setup done'
 
-
-
-
-
-
+exit 
