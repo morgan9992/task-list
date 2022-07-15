@@ -1,1 +1,1 @@
-this script is a small command line utility written in bash that serves the purpouse of a task/to do list. All dependencies for the script are installed on most practically all modern GNU linux systems. make sure you run the setup *script* before starting the main script.
+this script is a small command line utility written in bash that serves the purpouse of a task/to do list. All the dependencies for the script are installed on practically all modern GNU linux systems. make sure you run the *setup* script before starting the main script.
