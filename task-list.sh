@@ -13,10 +13,6 @@ task_list_configf="$HOME/$configf_name"
 
 source $task_list_configf
 
-
-#CurrentFilePath=/home/morgan/list/current-textfile.txt
-#TmpStore=/home/morgan/list/tmp.txt
-
 where(){
 echo "your task-list file and temp file are stored at $LOCATE"
 
