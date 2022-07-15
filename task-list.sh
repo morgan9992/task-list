@@ -1,9 +1,27 @@
 #!/bin/bash 
-
-#global variables  
-CurrentFilePath=/home/morgan/list/current-textfile.txt
-TmpStore=/home/morgan/list/tmp.txt
+#global variables   
+configf_name=.task-list
 input=NULL
+
+if [[ ! -f "$HOME/$configf_name" ]];
+then 
+	echo "can not find $configf_name under $HOME please run the setup script before this"	
+exit
+fi
+
+task_list_configf="$HOME/$configf_name"
+
+source $task_list_configf
+
+
+#CurrentFilePath=/home/morgan/list/current-textfile.txt
+#TmpStore=/home/morgan/list/tmp.txt
+
+where(){
+echo "your task-list file and temp file are stored at $LOCATE"
+
+
+}
 
 percent(){
 
@@ -138,6 +156,10 @@ case $1 in
 
 	left)
 	percent
+	shift
+;;	
+	where)
+	where
 	shift
 ;;
 

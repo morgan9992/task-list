@@ -4,15 +4,60 @@ tmp_file_name=tmp.txt
 task_file_name=task-file.txt
 config_file_name=.task-list
 
+if [ -f "$HOME/$config_file_name" ]
+then 
+	echo "$config_file_name was already found in your home directory, are you sure you want to run this script again an over write everything (y/n)"
+	read input
+while [[ "$input" != "y" && "$input" != "n" ]]; do
+  echo 'that is not an option please enter either y or n'
+  read input
+  done
+
+if [ "$input" == "y" ]
+then
+	rm "$HOME/$config_file_name" 
+	echo 'starting setup'   
+else
+	exit
+fi
+fi
+
+write_config(){
+
+echo "LOCATE=$DIR_PATH" > $HOME/$config_file_name
+echo "CurrentFilePath=$DIR_PATH/$task_file_name" >> $HOME/$config_file_name
+echo "TmpStore=$DIR_PATH/$tmp_file_name" >> $HOME/$config_file_name
+
+
+echo 'setup complete'
+exit
+}
 get_path(){
 echo 'enter path to desired directory of install'
-  read DIR_PATH 
-   while [ ! -d $DIR_PATH ]
+  read -e INIT_DIR_PATH 
+   while [ ! -d $INIT_DIR_PATH ]
    do     
           echo 'this is not a valid path, please re-enter a valid directory path'
-          read DIR_PATH
+          read INIT_DIR_PATH
 
 done 
+
+
+# removing / from path so that wrong path is not written into config file when $task_file_name & $tmp_file are appended to $DIR_PATH 
+if [[ $INIT_DIR_PATH == */ ]]
+then 
+	num_char=$(echo $INIT_DIR_PATH | wc -c)
+	cut_num=`expr "$num_char" - 2` 
+	DIR_PATH=$(echo $INIT_DIR_PATH | cut -c 1-$cut_num)	 
+
+else 
+
+DIR_PATH=$INIT_DIR_PATH	
+	
+fi
+
+
+
 }
 
 create_files(){
@@ -26,8 +71,6 @@ while [[ "$input" != "y" && "$input" != "n" ]]; do
  echo 'that is not an option please enter either y or n'
  read input 
 done 
-
-estab_task_list="TRUE" #  used to stop touch commands from being executed - we have already decdided the outcome of task-file.txt if the nested if statements are executed 
 
 if [ "$input" == "y" ]
 then 
@@ -48,8 +91,6 @@ then
    echo 'that is not an option please enter either y or n'
    read input
   done
-  
-estab_tmp_list="TRUE" #same purpouse as in the previosu nested if statements but for the tmp file this time 
 
   if [ "$input" == "y" ]
   then
@@ -60,8 +101,8 @@ estab_tmp_list="TRUE" #same purpouse as in the previosu nested if statements but
   fi
   fi
 
-touch $task_file_name
-touch $tmp_file_name
+touch $task_file_name    
+touch $tmp_file_name  
 
  
  }
@@ -70,24 +111,11 @@ get_path
  
 create_files
 
-if [ -f "$HOME/$config_file_name" ]
-then 
-	echo "$config_file_name already exists under $HOME, would you like to replace it? (y/n)" 
-read input
- 
-while [[ "$input" != "y" && "$input" != "n" ]]; do
-   echo 'that is not an option please enter either y or n'
-    read input
-    done
 
-    
+echo "a config file will  be installed in your home directory"	
+touch "$HOME/$config_file_name" 
+
+write_config
 
 
-echo "a config file will also be installed in your home directory: $HOME"	
-sleep 3
-touch "$HOME/$config_file_name" && echo "creating $config_file_name"
 
-
-echo 'setup done'
-
-exit 
